@@ -124,9 +124,16 @@ export const useQuestionBuffer = (
   });
 
   const answerQuestion = React.useCallback(({ value, insightId }) => {
+    var undo=true;
     seenInsight.current.push(insightId);
     if (value !== -1) {
-      robotoff.annotate(insightId, value);
+      setTimeout(() => {
+        if(!undo){
+          robotoff.annotate(insightId, value);
+        } else {
+          console.log('Undo');
+        }
+      }, 10000);
     }
     dispatch({ type: "remove", payload: { insightId, value } });
   }, []);
