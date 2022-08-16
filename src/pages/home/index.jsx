@@ -7,12 +7,14 @@ import QuestionCard from "../../components/QuestionCard";
 import { localFavorites } from "../../localeStorageManager";
 import HomeCards from "./homeCards";
 import { useTheme } from "@mui/material/styles";
+import LoginContext from "../../contexts/login";
 
 const Home = () => {
   const theme = useTheme();
   const [savedQuestions] = React.useState(() => {
     return localFavorites.fetch().questions ?? [];
   });
+  const { isLoggedIn } = React.useContext(LoginContext);
   const size = Object.keys(savedQuestions).length;
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -43,64 +45,68 @@ const Home = () => {
           ))}
         </Stack>
       </Box>
-      <Box
-        padding={{ xs: "20px", sm: "50px" }}
-        sx={{
-          backgroundColor: theme.palette.secondary.main,
-        }}
-      >
-        <Stack
-          spacing={4}
-          flexWrap="wrap"
-          direction={{ xs: "column", sm: "column", md: "row" }}
-          alignItems="center"
-          justifyContent="center"
-        >
-          <Typography
-            variant="h5"
+      {!isLoggedIn && (
+        <>
+          <Box
+            padding={{ xs: "20px", sm: "50px" }}
             sx={{
-              textAlign: "center",
-              lineHeight: "1.75",
+              backgroundColor: theme.palette.secondary.main,
             }}
           >
-            Want to make your contribution count? Create an account or sign in
-            on Open Food Facts!
-          </Typography>
-          <Stack direction="row">
+            <Stack
+              spacing={4}
+              flexWrap="wrap"
+              direction={{ xs: "column", sm: "column", md: "row" }}
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Typography
+                variant="h5"
+                sx={{
+                  textAlign: "center",
+                  lineHeight: "1.75",
+                }}
+              >
+                Want to make your contribution count? Create an account or sign
+                in on Open Food Facts!
+              </Typography>
+              <Stack direction="row">
+                <Button
+                  variant="contained"
+                  href="https://world.openfoodfacts.org/cgi/login.pl"
+                  sx={{
+                    backgroundColor: "white",
+                    color: "black",
+                    margin: "0 20px",
+                  }}
+                >
+                  Login
+                </Button>
+                <Button
+                  variant="contained"
+                  href="https://world.openfoodfacts.org/cgi/user.pl"
+                  sx={{
+                    backgroundColor: "white",
+                    color: "black",
+                  }}
+                >
+                  Sign up
+                </Button>
+              </Stack>
+            </Stack>
+          </Box>
+          <Box textAlign="center">
             <Button
-              variant="contained"
-              href="https://world.openfoodfacts.org/cgi/login.pl"
+              onClick={handleOpen}
               sx={{
-                backgroundColor: "white",
-                color: "black",
-                margin: "0 20px",
+                margin: "20px auto",
               }}
             >
-              Login
+              Learn why your contribution matters
             </Button>
-            <Button
-              variant="contained"
-              href="https://world.openfoodfacts.org/cgi/user.pl"
-              sx={{
-                backgroundColor: "white",
-                color: "black",
-              }}
-            >
-              Sign up
-            </Button>
-          </Stack>
-        </Stack>
-      </Box>
-      <Box textAlign="center">
-        <Button
-          onClick={handleOpen}
-          sx={{
-            margin: "20px auto",
-          }}
-        >
-          Learn why your contribution matters
-        </Button>
-      </Box>
+          </Box>
+        </>
+      )}
       <Modal
         open={open}
         onClose={handleClose}
